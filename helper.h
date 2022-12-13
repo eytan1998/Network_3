@@ -1,4 +1,11 @@
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
 
 #define ID1  "0001100011101101"
 #define ID2  "0000110010001111"
@@ -15,5 +22,5 @@ void changeCC(int socket,char* protocol);
 
 char *readFile();
 
-char * xoring(const char *a, const char* b);
+char * xor16way(const char *a, const char* b);
 

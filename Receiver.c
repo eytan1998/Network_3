@@ -1,19 +1,17 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
 #include <time.h>
 #include "helper.h"
+#include "dinamic_array.h"
 
 
 int main() {
 
     //establish connection
     socklen_t addr_size;
+    Array dinamic_arr;
+    initArray(&dinamic_arr,4);
 
-    double firstTime;
-    double secondTime;
+    float firstTime;
+    float secondTime;
 
     int server_sock = socket(AF_INET, SOCK_STREAM, 0);
     if (server_sock == -1) {
@@ -73,7 +71,7 @@ int main() {
         printf("[+]Receiver got first part.\n");
 
         //sending authentication
-        char *auth = xoring(ID1, ID2);
+        char *auth = xor16way(ID1, ID2);
         send(client_sock, auth, ID_LENGTH, 0);
         free(auth);
         printf("[+]Receiver sent auth.\n");
@@ -99,6 +97,10 @@ int main() {
         secondTime = (float) (end - start) / CLOCKS_PER_SEC;
         printf("[+]Receiver got second part.\n");
 
+        //save times
+        insertArray(&dinamic_arr,firstTime,secondTime);
+
+
         bzero(buffer, BUFFER_SIZE);
         recv(client_sock, buffer, strlen("exit"), 0);
         if (strcmp(buffer, "exit") == 0) {
@@ -106,16 +108,24 @@ int main() {
         }
         printf("Receiving files again.\n");
         changeCC(client_sock, CUBIC);
+
+
     }
     //get "user input"
 
 
     //exit
     printf("[+]Received exit massage.\n");
-    printf("FirstTime: %f\n", firstTime);
-    printf("SecondTime: %f\n", secondTime);
-    printf("AverageTime: %f\n", (firstTime + secondTime) / 2);
 
+    printTimes(&dinamic_arr);
+    printf("FirstTime average: %f\n",
+           firstElementsAverage(&dinamic_arr));
+    printf("SecondTime average: %f\n",
+           secondElementsAverage(&dinamic_arr));
+    printf("AverageTime: %f\n",
+           allElementsAverage(&dinamic_arr));
+
+    freeArray(&dinamic_arr);
     close(server_sock);
     printf("[+]Socket closed.\n");
 

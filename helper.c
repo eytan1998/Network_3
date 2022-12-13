@@ -1,12 +1,4 @@
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <arpa/inet.h>
-#include <netinet/tcp.h>
-
 #include "helper.h"
-
 #define FILE_PATH "send.txt"
 
 void changeCC(int socket, char *protocol) {
@@ -41,7 +33,7 @@ char *readFile() {
 }
 
 
-char *xoring(const char *a, const char *b) {
+char *xor16way(const char *a, const char *b) {
     int length = ID_LENGTH+1;
     char *c = malloc(length);
     for (int i = 0; i < length-1; i++) {

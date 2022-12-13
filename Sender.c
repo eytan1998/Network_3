@@ -1,13 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include "helper.h"
-
-
+#include "dinamic_array.h"
 
 int main() {
     //read file
@@ -48,7 +40,7 @@ int main() {
         //check auth
         bzero(buffer, BUFFER_SIZE);
         recv(sock, buffer, BUFFER_SIZE, 0);
-        char *auth = xoring(ID1, ID2);
+        char *auth = xor16way(ID1, ID2);
         if (strncmp(buffer, auth, ID_LENGTH) == 0) {
             printf("[+]Authenticated\n");
         } else {
