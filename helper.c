@@ -6,14 +6,15 @@
 #include <netinet/tcp.h>
 
 #include "helper.h"
+
 #define FILE_PATH "send.txt"
 
-void changeCC(int socket,char* protocol){
+void changeCC(int socket, char *protocol) {
     if (setsockopt(socket, IPPROTO_TCP, TCP_CONGESTION, protocol, strlen(protocol)) != 0) {
         perror("[-]Can't change CC\n");
         return;
     }
-    printf("[+]CC changed to: %s\n",protocol);
+    printf("[+]CC changed to: %s\n", protocol);
 
 }
 
@@ -37,4 +38,19 @@ char *readFile() {
 
     fclose(fp);
     return text;
+}
+
+
+char *xoring(const char *a, const char *b) {
+    int length = ID_LENGTH+1;
+    char *c = malloc(length);
+    for (int i = 0; i < length-1; i++) {
+        // If the Character matches
+        if (a[i] == b[i])
+            c[i] = '0';
+        else
+            c[i] = '1';
+    }
+    c[length-1] = '\0';
+    return c;
 }

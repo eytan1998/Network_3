@@ -33,48 +33,52 @@ int main() {
     }
     printf("[+]TCP socket connected.\n");
 
+    unsigned long un = htonl(strlen(text)/2);
+    printf("Sending file size is: %lu bytes, (~%lu MB)\n", strlen(text),strlen(text)/1000000);
+    send(sock, &un, sizeof(unsigned long), 0);
 
 
     //send first
-    char buffer[SIZE];
-    step3:;
-    send(sock, text, strlen(text) / 2, 0);
-    printf("[+]First File Send.\n");
+    char buffer[BUFFER_SIZE];
+    while (1) {
+        bzero(buffer, BUFFER_SIZE);
+        send(sock, text, strlen(text) / 2, 0);
+        printf("[+]First File Send.\n");
 
+        //check auth
+        bzero(buffer, BUFFER_SIZE);
+        recv(sock, buffer, BUFFER_SIZE, 0);
+        char *auth = xoring(ID1, ID2);
+        if (strncmp(buffer, auth, ID_LENGTH) == 0) {
+            printf("[+]Authenticated\n");
+        } else {
+            printf("[-]Wrong authenticate: \"%s\"\n", buffer);
+        }
+        free(auth);
 
-    //check auth
-    bzero(buffer, SIZE);
-    recv(sock, buffer, SIZE, 0);
-    if (strcmp(buffer, AUTH) == 0) {
-        printf("[+]Authenticated\n");
-    } else
-        printf("[-]Wrong authenticate: %s\n", buffer);
+        //change CC algo
+        changeCC(sock, RENO);
 
-    //change CC algo
-    changeCC(sock, RENO);
+        //send second
+        char * textTmp =  (text + strlen(text) / 2);
+        send(sock, textTmp, strlen(textTmp), 0);
 
-    //send second
-    text += strlen(text) / 2;
-    send(sock, text, strlen(text), 0);
-
-    //user choice
-    char choice;
-    printf("Send file again? [y/ any]");
-    scanf(" %c", &choice);
-    if (choice == 'y') {
+        //user choice
+        char choice;
+        printf("Send file again? [y/ any] ");
+        scanf(" %c", &choice);
+        if (choice != 'y') {
+            send(sock, "exit", 4, 0);
+            printf("Sent exit code.\n");
+            break;
+        }
+        send(sock, "roll", 4, 0);
         printf("Sending files again.\n");
-
         changeCC(sock, CUBIC);
-        goto step3;
-
-    } else {
-        send(sock, "exit", 4, 0);
-        printf("Sent exit code.\n");
     }
     //exit
-    close(sock);
+    free(text);
     printf("[+]Disconnected from the receiver.\n");
-
-
+    close(sock);
     return 0;
 }
