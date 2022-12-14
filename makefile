@@ -11,7 +11,7 @@ create_file:
 	python3 create_file.py
 
 Receiver: Receiver.o helper.o dinamic_array.o
-	gcc -g Receiver.o helper.c dinamic_array.c -o $@
+	gcc -g Receiver.o helper.o dinamic_array.o -o $@
 
 Sender: Sender.o helper.o
 	gcc -g Sender.o helper.o -o $@

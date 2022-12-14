@@ -2,21 +2,21 @@
 #include <malloc.h>
 
 typedef struct Array {
-    float *first_time_arr;
-    float *second_time_arr;
-    int index;
+    double *first_time_arr;
+    double *second_time_arr;
+    int freeIndex;
     size_t size;
 } Array;
 
-void initArray(Array *a, size_t initialSize);
+int initArray(Array *a, size_t initialSize);
 
-void insertArray(Array *a, float first_element, float second_element);
+int insertArray(Array *a, double first_element, double second_element);
 
-float firstElementsAverage(Array *a);
+double firstElementsAverage(Array *a);
 
-float secondElementsAverage(Array *a);
+double secondElementsAverage(Array *a);
 
-float allElementsAverage(Array *a);
+double allElementsAverage(Array *a);
 
 void printTimes(Array *a);
 

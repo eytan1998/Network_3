@@ -19,13 +19,13 @@ int main() {
     addr.sin_port = PORT;
     addr.sin_addr.s_addr = inet_addr(IP);
 
-    if (connect(sock, (struct sockaddr *) &addr, sizeof(addr)) == -1) {
+    if (connect(sock, (struct sockaddr *) &addr, sizeof(addr)) == ERROR) {
         perror("[-]Connection error ");
         exit(1);
     }
     printf("[+]TCP socket connected.\n");
 
-    unsigned long un = htonl(strlen(text)/2);
+    unsigned long un = htonl(strlen(text));
     printf("Sending file size is: %lu bytes, (~%lu MB)\n", strlen(text),strlen(text)/1000000);
     send(sock, &un, sizeof(unsigned long), 0);
 
@@ -59,7 +59,7 @@ int main() {
         char choice;
         printf("Send file again? [y/ any] ");
         scanf(" %c", &choice);
-        if (choice != 'y') {
+        if (choice != 'y' && choice != EOF) {
             send(sock, "exit", 4, 0);
             printf("Sent exit code.\n");
             break;
