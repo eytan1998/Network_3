@@ -2,10 +2,10 @@
 #include "dinamic_array.h"
 
 int main() {
-    //read file
+    //1 read file
     char *text = readFile();
 
-    //establish connection
+    //2 establish connection
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("[-]Socket error");
@@ -25,19 +25,21 @@ int main() {
     }
     printf("[+]TCP socket connected.\n");
 
+    //sending file size
     unsigned long un = strlen(text);
     printf("Sending file size is: %lu bytes, (~%lu MB)\n", strlen(text),strlen(text)/1000000);
     send(sock, &un, sizeof(unsigned long), 0);
 
 
-    //send first
+    //3 send first
     char buffer[BUFFER_SIZE];
     while (1) {
         bzero(buffer, BUFFER_SIZE);
+        printf("Sending first half of file...\n");
         send(sock, text, strlen(text) / 2, 0);
         printf("[+]First File Send.\n");
 
-        //check auth
+        //4 check auth
         bzero(buffer, BUFFER_SIZE);
         recv(sock, buffer, BUFFER_SIZE, 0);
         char *auth = xor16way(ID1, ID2);
@@ -48,23 +50,26 @@ int main() {
         }
         free(auth);
 
-        //change CC algo
+        //5 change CC algo
         changeCC(sock, RENO);
 
-        //send second
+        //6 send second
         char * textTmp =  (text + strlen(text) / 2);
+        printf("Sending second half of file...\n");
         send(sock, textTmp, strlen(textTmp), 0);
+        printf("[+]Second File Send.\n");
 
-        //user choice
+        //7 user choice
         char choice;
         printf("Send file again? [y/ any] ");
         scanf(" %c", &choice);
-        if (choice != 'y' && choice != EOF) {
+        if (choice != 'y') {
             send(sock, "exit", 4, 0);
             printf("Sent exit code.\n");
             break;
         }
         send(sock, "roll", 4, 0);
+        printf("------------------------.\n");
         printf("Sending files again.\n");
         changeCC(sock, CUBIC);
     }

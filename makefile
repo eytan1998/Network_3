@@ -1,10 +1,16 @@
 
 .PHONY: clean all create_file
 
-all: create_file Receiver Sender
+all:  Receiver Sender
+
+run_sender: Sender
+	./Sender
+
+run_receiver: Receiver
+	./Receiver
 
 clean:
-	rm  -f *.o send.txt Receiver Sender
+	rm  -f *.o *.txt Receiver Sender
 
 create_file:
 	rm -f send.txt
@@ -13,7 +19,7 @@ create_file:
 Receiver: Receiver.o helper.o dinamic_array.o
 	gcc -g Receiver.o helper.o dinamic_array.o -o $@
 
-Sender: Sender.o helper.o
+Sender: Sender.o helper.o create_file
 	gcc -g Sender.o helper.o -o $@
 
 Sender.o: Sender.c helper.h

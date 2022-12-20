@@ -3,7 +3,7 @@
 #include "dinamic_array.h"
 
 int main() {
-    //establish connection
+    //1 establish connection
     int receiver_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (receiver_socket == ERROR) {
         perror("[-]Socket error");
@@ -40,29 +40,30 @@ int main() {
     int receiveSize = (int) *(int *) buffer;
     printf("Received file size is: %d bytes, (~%d MB)\n", receiveSize, receiveSize / 1000000);
 
-
+    //initialize the dinamic array
     Array dinamic_arr;
     initArray(&dinamic_arr, 4);
 
+    //to measure time
     double firstTime;
     double secondTime;
     struct timeval start, end;
 
     while (1) {
-        //sending first part
+        // 3 receiving first part
 
         gettimeofday(&start, NULL);
         receiveFile(connection_socket, buffer, receiveSize / 2);
         gettimeofday(&end, NULL);
 
 
-        //calculate first part
+        // 4 calculate first part
         firstTime = (double) (end.tv_sec - start.tv_sec) * 1000.0;      // sec to ms
-        firstTime += (double) (end.tv_usec - start.tv_usec) / 1000.0;   // us to ms
+        firstTime += (double) (end.tv_usec - start.tv_usec) / 1000.0;
 
         printf("[+]Receiver got first part.\n");
 
-        //sending authentication
+        // 6 sending authentication
         char *auth = xor16way(ID1, ID2);
         send(connection_socket, auth, ID_LENGTH, 0);
         free(auth);
@@ -71,22 +72,22 @@ int main() {
         //change cc Algo
         changeCC(receiver_socket, RENO);
 
-        //sending second part
+        // 7 receiving second part
         gettimeofday(&start, NULL);
         receiveFile(connection_socket, buffer, receiveSize / 2 + ((receiveSize % 2 == 0) ? 0 : 1));
         gettimeofday(&end, NULL);
 
 
-        //calculate second part
+        // 8 calculate second part
         secondTime = (double) (end.tv_sec - start.tv_sec) * 1000.0;      // sec to ms
-        secondTime += (double) (end.tv_usec - start.tv_usec) / 1000.0;   // us to ms
+        secondTime += (double) (end.tv_usec - start.tv_usec) / 1000.0;
 
         printf("[+]Receiver got second part.\n");
 
-        //save times
+        // 5,9 save times
         insertArray(&dinamic_arr, firstTime, secondTime);
 
-        //get "user input"
+        // 10 get "user input"
         bzero(buffer, BUFFER_SIZE);
         recv(connection_socket, buffer, strlen("exit"), 0);
         if (strcmp(buffer, "exit") == 0) {
@@ -101,11 +102,11 @@ int main() {
 
     //exit, print times
     printTimes(&dinamic_arr);
-    printf("\nFirst part average (CUBIC): %f millisecond\n",
+    printf("\nFirst part average (CUBIC): %f ms\n",
            firstElementsAverage(&dinamic_arr));
-    printf("Second part average (RENO): %f millisecond\n",
+    printf("Second part average (RENO): %f ms\n",
            secondElementsAverage(&dinamic_arr));
-    printf("Average time of both parts: %f millisecond\n",
+    printf("Average time of both parts: %f ms\n",
            allElementsAverage(&dinamic_arr));
 
 

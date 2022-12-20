@@ -4,6 +4,7 @@
 int initArray(Array *a, size_t initialSize) {
     a->first_time_arr = NULL;
     a->second_time_arr = NULL;
+    // allocating memory for the array and check for errors
     a->first_time_arr = malloc(initialSize * sizeof(double ));
     if (a->first_time_arr == NULL) {
         fputs("[-]memory alloc fails first_time_arr", stderr);
@@ -17,14 +18,16 @@ int initArray(Array *a, size_t initialSize) {
         free(a->second_time_arr);
         return -1;
     }
+    //free index is where the next inserted element
     a->freeIndex = 0;
+
     a->size = initialSize;
     return 0;
 }
 
 int insertArray(Array *a, double first_element, double second_element) {
-    // a->used is the number of used entries, because a->array[a->used++] updates a->used only *after* the array has been accessed.
-    // Therefore, a->used can go up to a->size
+    //if the empty cell is the size of the array
+    // so we need to expand the array
     if (a->freeIndex == a->size) {
         a->size *= 2;
         a->first_time_arr = realloc(a->first_time_arr, a->size * sizeof(double ));
@@ -40,6 +43,7 @@ int insertArray(Array *a, double first_element, double second_element) {
             return -1;
         }
     }
+    //insert the elements after we sure we have place for them
     a->first_time_arr[a->freeIndex] = first_element;
     a->second_time_arr[a->freeIndex] = second_element;
     a->freeIndex++;
