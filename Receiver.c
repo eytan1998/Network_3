@@ -37,7 +37,7 @@ int main() {
     char buffer[BUFFER_SIZE];
     bzero(buffer, BUFFER_SIZE);
     recv(connection_socket, buffer, BUFFER_SIZE, 0);
-    int receiveSize = (int) ntohl(*(int *) buffer);
+    int receiveSize = (int) *(int *) buffer;
     printf("Received file size is: %d bytes, (~%d MB)\n", receiveSize, receiveSize / 1000000);
 
 
@@ -52,13 +52,13 @@ int main() {
         //sending first part
 
         gettimeofday(&start, NULL);
-        receiveFile(connection_socket, buffer, receiveSize / 2  );
+        receiveFile(connection_socket, buffer, receiveSize / 2);
         gettimeofday(&end, NULL);
 
 
         //calculate first part
-        firstTime = (double )(end.tv_sec - start.tv_sec) * 1000.0;      // sec to ms
-        firstTime += (double )(end.tv_usec - start.tv_usec) / 1000.0;   // us to ms
+        firstTime = (double) (end.tv_sec - start.tv_sec) * 1000.0;      // sec to ms
+        firstTime += (double) (end.tv_usec - start.tv_usec) / 1000.0;   // us to ms
 
         printf("[+]Receiver got first part.\n");
 
@@ -73,13 +73,13 @@ int main() {
 
         //sending second part
         gettimeofday(&start, NULL);
-        receiveFile(connection_socket, buffer, receiveSize / 2+ ((receiveSize%2==0)?0:1));
+        receiveFile(connection_socket, buffer, receiveSize / 2 + ((receiveSize % 2 == 0) ? 0 : 1));
         gettimeofday(&end, NULL);
 
 
         //calculate second part
-        secondTime = (double )(end.tv_sec - start.tv_sec) * 1000.0;      // sec to ms
-        secondTime += (double )(end.tv_usec - start.tv_usec) / 1000.0;   // us to ms
+        secondTime = (double) (end.tv_sec - start.tv_sec) * 1000.0;      // sec to ms
+        secondTime += (double) (end.tv_usec - start.tv_usec) / 1000.0;   // us to ms
 
         printf("[+]Receiver got second part.\n");
 
@@ -101,9 +101,9 @@ int main() {
 
     //exit, print times
     printTimes(&dinamic_arr);
-    printf("\nFirst part average: %f millisecond\n",
+    printf("\nFirst part average (CUBIC): %f millisecond\n",
            firstElementsAverage(&dinamic_arr));
-    printf("Second part average: %f millisecond\n",
+    printf("Second part average (RENO): %f millisecond\n",
            secondElementsAverage(&dinamic_arr));
     printf("Average time of both parts: %f millisecond\n",
            allElementsAverage(&dinamic_arr));

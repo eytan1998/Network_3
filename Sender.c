@@ -25,7 +25,7 @@ int main() {
     }
     printf("[+]TCP socket connected.\n");
 
-    unsigned long un = htonl(strlen(text));
+    unsigned long un = strlen(text);
     printf("Sending file size is: %lu bytes, (~%lu MB)\n", strlen(text),strlen(text)/1000000);
     send(sock, &un, sizeof(unsigned long), 0);
 
