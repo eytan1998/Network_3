@@ -73,7 +73,7 @@ double allElementsAverage(Array *a) {
 void printTimes(Array *a) {
     printf("\nAll times:\n");
     for (int i = 0; i < a->freeIndex; ++i) {
-        printf("The #%d time: the first part is: %f, second is: %f millisecond\n", i + 1, a->first_time_arr[i],
+        printf("\tThe #%d time: the first part is: %f ms, second is: %f ms\n", i + 1, a->first_time_arr[i],
                a->second_time_arr[i]);
     }
 }

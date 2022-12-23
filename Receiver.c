@@ -24,7 +24,7 @@ int main() {
     }
     printf("[+]Bind to: %s:%d\n", IP, PORT);
 
-    if (listen(receiver_socket, 5) == ERROR) {
+    if (listen(receiver_socket, 1) == ERROR) {
         perror("[-]Listen error");
         exit(1);
     }
@@ -67,7 +67,7 @@ int main() {
         char *auth = xor16way(ID1, ID2);
         send(connection_socket, auth, ID_LENGTH, 0);
         free(auth);
-        printf("[+]Receiver sent auth.\n");
+        printf("Receiver sent auth...\n");
 
         //change cc Algo
         changeCC(receiver_socket, RENO);
@@ -95,7 +95,7 @@ int main() {
             break;
         }
         printf("------------------------.\n");
-        printf("[+]User choose send files again.\n");
+        printf("User choose send files again...\n");
         changeCC(connection_socket, CUBIC);
     }
 

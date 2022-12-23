@@ -15,6 +15,7 @@ void receiveFile(int socket, char buffer[BUFFER_SIZE], int size) {
             printf("[-]Error while receiving.\n");
             break;
         }
+
     }
 }
 

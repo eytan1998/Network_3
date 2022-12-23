@@ -34,7 +34,6 @@ int main() {
     //3 send first
     char buffer[BUFFER_SIZE];
     while (1) {
-        bzero(buffer, BUFFER_SIZE);
         printf("Sending first half of file...\n");
         send(sock, text, strlen(text) / 2, 0);
         printf("[+]First File Send.\n");
@@ -65,7 +64,7 @@ int main() {
         scanf(" %c", &choice);
         if (choice != 'y') {
             send(sock, "exit", 4, 0);
-            printf("Sent exit code.\n");
+            printf("Sending exit code...\n");
             break;
         }
         send(sock, "roll", 4, 0);
