@@ -50,7 +50,8 @@ As soon as you choose to exit, the time took to receive the file is printed as f
 3) the average of receiving the second half (reno algorithm).
 
 4) the overall avrage.
-
+# Program flow diagram
+![Screenshot](program_flow.drawio.png)
 # Overview
 [Receiver.c](https://github.com/eytan1998/Network_3/blob/main/Receiver.c) - is the program that receives the file.
 
