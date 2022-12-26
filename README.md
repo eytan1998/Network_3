@@ -50,6 +50,20 @@ As soon as you choose to exit, the time took to receive the file is printed as f
 3) the average of receiving the second half (reno algorithm).
 
 4) the overall avrage.
+
+# Example of output:
+```bash
+
+All times:
+        The #1 time: the first part is: 0.837000 ms, second is: 1.186000 ms
+        The #2 time: the first part is: 2.147000 ms, second is: 3.121000 ms
+
+First part average (CUBIC): 1.492000 ms
+Second part average (RENO): 2.153500 ms
+Average time of both parts: 1.822750 ms
+```
+
+
 # Program flow diagram
 ![Screenshot](program_flow.drawio.png)
 # Overview
