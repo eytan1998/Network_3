@@ -14,7 +14,7 @@ int main() {
     struct sockaddr_in receiver_addr, client_addr;
     memset(&receiver_addr, '\0', sizeof(receiver_addr));
     receiver_addr.sin_family = AF_INET;
-    receiver_addr.sin_port = PORT;
+    receiver_addr.sin_port = htons(PORT);
     receiver_addr.sin_addr.s_addr = inet_addr(IP);
     socklen_t addr_size = sizeof(client_addr);
 
@@ -33,7 +33,7 @@ int main() {
     int connection_socket = accept(receiver_socket, (struct sockaddr *) &client_addr, &addr_size);
     printf("[+]Sender connected.\n");
 
-    //get half file size from sender
+    //get file size from sender
     char buffer[BUFFER_SIZE];
     bzero(buffer, BUFFER_SIZE);
     recv(connection_socket, buffer, BUFFER_SIZE, 0);
@@ -74,6 +74,7 @@ int main() {
 
         // 7 receiving second part
         gettimeofday(&start, NULL);
+        //if odd need to account for the extra bit
         receiveFile(connection_socket, buffer, receiveSize / 2 + ((receiveSize % 2 == 0) ? 0 : 1));
         gettimeofday(&end, NULL);
 

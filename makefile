@@ -3,12 +3,6 @@
 
 all:  Receiver Sender
 
-run_sender: Sender
-	./Sender
-
-run_receiver: Receiver
-	./Receiver
-
 clean:
 	rm  -f *.o *.txt Receiver Sender
 

@@ -16,7 +16,7 @@ int main() {
     struct sockaddr_in addr;
     memset(&addr, '\0', sizeof(addr));
     addr.sin_family = AF_INET;
-    addr.sin_port = PORT;
+    addr.sin_port = htons(PORT);
     addr.sin_addr.s_addr = inet_addr(IP);
 
     if (connect(sock, (struct sockaddr *) &addr, sizeof(addr)) == ERROR) {
