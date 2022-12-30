@@ -21,10 +21,10 @@ void receiveFile(int socket, char buffer[BUFFER_SIZE], int size) {
 
 void changeCC(int socket, char *protocol) {
     //change algo and  check error
-    if (setsockopt(socket, IPPROTO_TCP, TCP_CONGESTION, protocol, strlen(protocol)) != 0) {
+  /*  if (setsockopt(socket, IPPROTO_TCP, TCP_CONGESTION, protocol, strlen(protocol)) != 0) {
         perror("[-]Can't change CC\n");
         return;
-    }
+    }*/
     printf("[+]CC changed to: %s\n", protocol);
 }
 

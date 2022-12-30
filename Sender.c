@@ -13,6 +13,10 @@ int main() {
     }
     printf("[+]TCP socket created.\n");
 
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int)) < 0) {
+        perror("[-] setsockopt(SO_REUSEADDR) failed");
+    }
+
     struct sockaddr_in addr;
     memset(&addr, '\0', sizeof(addr));
     addr.sin_family = AF_INET;
@@ -27,7 +31,7 @@ int main() {
 
     //sending file size
     unsigned long un = strlen(text);
-    printf("Sending file size is: %lu bytes, (~%lu MB)\n", strlen(text),strlen(text)/1000000);
+    printf("Sending file size is: %lu bytes, (~%lu MB)\n", strlen(text), strlen(text) / 1000000);
     send(sock, &un, sizeof(unsigned long), 0);
 
 
@@ -53,7 +57,7 @@ int main() {
         changeCC(sock, RENO);
 
         //6 send second
-        char * textTmp =  (text + strlen(text) / 2);
+        char *textTmp = (text + strlen(text) / 2);
         printf("Sending second half of file...\n");
         send(sock, textTmp, strlen(textTmp), 0);
         printf("[+]Second File Send.\n");

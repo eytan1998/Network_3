@@ -18,6 +18,9 @@ int main() {
     receiver_addr.sin_addr.s_addr = inet_addr(IP);
     socklen_t addr_size = sizeof(client_addr);
 
+    if (setsockopt(receiver_socket, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int)) < 0)
+        perror("[-] setsockopt(SO_REUSEADDR) failed");
+
     if (bind(receiver_socket, (struct sockaddr *) &receiver_addr, sizeof(receiver_addr)) == ERROR) {
         perror("[-]Bind error");
         exit(1);
@@ -70,7 +73,7 @@ int main() {
         printf("Receiver sent auth...\n");
 
         //change cc Algo
-        changeCC(receiver_socket, RENO);
+        changeCC(connection_socket, RENO);
 
         // 7 receiving second part
         gettimeofday(&start, NULL);
